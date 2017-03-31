@@ -63,50 +63,16 @@ end
 
 
 
-def individual_salary_report
-
-    if session[:id].present? 
+def individual_salary_report 
         @emp_id=params[:emp_id]
-        @all_year=Array.new
-        i=0
-        AllSalary.select("DISTINCT(year)").each do |i1|
-            @all_year[i]=i1.year
-            i=i+1;
-        end
-    
-        @all_year.each do |i2|
-        @all_salary=Array.new
-
-        @year=i2
-        @all_salary[0]=@year
-        #puts(@year)
-        for @month in 1..12
-
-            @value=AllSalary.select(:amount).where(emp_id: @emp_id, year: @year, month: @month)
-            if @value.present?
-                @value.each do |i3|
-                    @value_tmp=i3.amount
-                    @all_salary[@month]=@value_tmp
-                end
-            else
-                @all_salary[@month]="-"
-            end
-        end
-
-    end
-    else
-       redirect_to :controller => 'admin',:action => 'home'
-    end 
-
-    
-
-
 end
 
 def download_pdf
-    x=session[:id]
+    #x=session[:id]
     emp_id=params[:emp_id]
     link=params[:link]
+    puts("888888888888888888888888888888888")
+    puts(link)
     #emp_id=link.params[:emp_id]
     #puts(link)
     #kit=PDFKit.new()

@@ -1,15 +1,9 @@
 <html>
 <script type="text/javascript">
-window.onpageshow = function(event) 
-{
-  if (event.persisted) 
-  {
-    window.location="/salary/individual_salary_report"
-  }
-};
 
 function download()
 {
+    alert(window.location.href);
     window.location.href='download_pdf?link='+window.location.href+'&emp_id='+"<%= @emp_id %>"
 }
 
@@ -17,13 +11,12 @@ function download()
 </script>
 <body>
 
-<%= render "/admin/header" %>
     <% Employeedtl.where(emp_id: @emp_id).each do |i| %>
         <b>Employee Name</b>:&nbsp<%= i.name %><br>
         <b>Designation</b>:&nbsp<%= i.designation %>
 
     <% end %>
-    <table border="1" cellspacing="0" cellpadding="0">
+    <table border="1" cellspacing="0" cellpadding="0" id="tab1">
         <tr>
 	       <th>YEAR</th>
 	       <th colspan="12">Month</th>
