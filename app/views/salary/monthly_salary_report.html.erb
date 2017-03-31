@@ -1,0 +1,89 @@
+<script type="text/javascript">
+window.onpageshow = function(event) 
+{
+  if (event.persisted) 
+  {
+    window.location="/salary/monthly_salary_report"
+  }
+};
+
+function fun0()
+{
+	var m="<%= @month %>";
+	var y="<%= @year %>";
+	var m1;
+	var tot_day="<%= @tot_day %>";
+	if(m==1)
+		m1="January";
+	else if(m==2)
+		m1="February";
+	else if(m==3)
+		m1="March";
+	else if(m==4)
+		m1="April";
+	else if(m==5)
+		m1="May";
+	else if(m==6)
+		m1="June";
+	else if(m==7)
+		m1="July";
+	else if(m==8)
+		m1="August";
+	else if(m==9)
+		m1="September";
+	else if(m==10)
+		m1="October";
+	else if(m==11)
+		m1="November";
+	else
+		m1="December";
+	$("#h1").append(m1);
+	$("#h1").append(" ");
+	$("#h1").append(y);
+}
+
+
+
+</script>
+
+
+
+<body onload="fun0();">
+	<%= render "/admin/header" %>
+<h1 id="h1">Monthly report for </h1>
+
+<table border="1" cellspacing="0" cellpadding="0">
+	<tr>
+		<th>Employee ID</th>
+		<th>Employee Name</th>
+		<th>Amount</th>
+	</tr>
+<% 
+	@all_emp_distinct=Employeedtl.select(("DISTINCT(emp_id)")).each do |i2|
+		@cur_emp_id=i2.emp_id
+	@all_salary = AllSalary.where(year: @year, month: @month, emp_id: @cur_emp_id)
+	
+		
+		@salary_val_array= Array.new
+		@salary_val_array[0]=@cur_emp_id
+		@salary_val_array[1]=Employeedtl.select(:name).where(emp_id: @cur_emp_id)[0].name
+		@val=@all_salary.where(emp_id: @cur_emp_id)
+				if @val.present?
+					@salary_val_array[2]=@val[0].amount
+				else
+					@salary_val_array[2]="-"
+				end
+				puts(@salary_val_array)
+%>
+
+ <tr>
+        	<% @salary_val_array.each do |i1| %>
+        	<td><center><%= i1 %></center></td>
+        	<% end %>
+        </tr>
+	
+
+<% end %>
+
+</table>
+</body>

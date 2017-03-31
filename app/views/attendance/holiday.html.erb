@@ -1,0 +1,35 @@
+<script type="text/javascript">
+window.onpageshow = function(event) 
+{
+  if (event.persisted) 
+  {
+    window.location="/attendance/holiday"
+  }
+};
+</script>
+
+<body>
+<%= render "/admin/header" %>
+<h1>holiday</h1>
+
+<%= form_tag ('import_xls'), multipart: true do %>
+Upload file:&nbsp<%= file_field_tag :file %></br>
+  <%= submit_tag "Upload" %>
+<% end %>
+<br>
+<div style="border-style: dashed;"><br>Upload file in .xls format.<br>
+All data in the file should be save in the "Sheet1"
+<br>
+The table format of holiday is
+<table border="1" cellspacing="0" cellpadding="0">
+	<tr>
+		<th>Date</th>
+		<th>Reason</th>
+	</tr>	
+	<tr>
+		<td>DD/MM/YY</td>
+		<td>Reason for the holiday</td>
+
+	</tr>
+</table><br><br</div>
+</body>

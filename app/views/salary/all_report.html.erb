@@ -1,0 +1,74 @@
+<script>
+ $(document).ready(function () 
+ {
+ 	$("#d2").hide();
+ 	$("#d1").hide();
+ 	$("#rb1").click(function () 
+ 	{
+    	$("#d2").hide();
+    	$("#d1").show();
+    });
+  	$("#rb2").click(function () 
+  	{
+    	
+    	$("#d1").hide();
+    	$("#d2").show();
+     });
+ });   
+
+</script>
+
+<body>
+<h1>All report</h1>
+<input type="radio" id="rb1" name="report">Yearly Report<br>
+<input type="radio" id="rb2" name="report">Monthly Report<br>
+<div id="d1" name="Yearly Report">
+<table border="1" cellspacing="0" cellpadding="0" width="500">
+<tr>
+<td>Months</td>
+
+<th>2011</th>
+<th>2012</th>
+<th>2013</th>
+<th>2014</th>
+<th>2015</th>
+<th>2016</th>
+<th>2017</th>
+</tr>
+<tr><th>Janunary</th></tr>
+<tr><th>February</th></tr>
+<tr><th>March</th></tr>
+<tr><th>April</th></tr>
+<tr><th>May</th></tr>
+<tr><th>June</th></tr>
+<tr><th>July</th></tr>
+<tr><th>August</th></tr>
+<tr><th>September</th></tr>
+<tr><th>October</th></tr>
+<tr><th>November</th></tr>
+<tr><th>December</th></tr>
+</table>
+</div>
+
+
+
+
+<div id="d2" name="Monthly Report">
+<table border="1" cellspacing="0" cellpadding="0" width="500">
+<tr>
+<td>Name</td>
+<th>Janunary</th>
+<th>February</th>
+<th>March</th>
+<th>April</th>
+<th>May</th>
+<th>June</th>
+<th>July</th>
+<th>August</th>
+<th>September</th>
+<th>October</th>
+<th>November</th>
+<th>December</th>
+</tr>
+</table>
+</div>

@@ -1,0 +1,97 @@
+<script type="text/javascript">
+window.onpageshow = function(event) 
+{
+  if (event.persisted) 
+  {
+    window.location="/employee/employee_edit"
+  }
+};
+$(document).ready(function(){
+    $("#dob").datepicker({format: 'yyyy-mm-dd'});
+    $("#joindate").datepicker({format: 'yyyy-mm-dd'});
+  });
+function edit1 () 
+{
+	var emp_id=document.getElementById('emp_id').value;
+	var name=document.getElementById('name').value;
+	var desg=document.getElementById('desg').value;
+	var joindate=document.getElementById('joindate').value;
+	var contactno=document.getElementById('contactno').value;
+	var email=document.getElementById('email').value;
+	var address=document.getElementById('address').value;
+	var dob=document.getElementById('dob').value;
+	var city=document.getElementById('city').value;
+	var state=document.getElementById('state').value;
+	var pincode=document.getElementById('pincode').value;
+	var salary=document.getElementById('salary').value;
+	if(name=="")
+		alert("Name should not be empty");
+	else if(desg=="")
+		alert("Designation should not be empty");
+	else if(joindate=="")
+		alert("Joindate should not be empty");
+	else if(contactno=="")
+		alert("Contact No should not be empty");
+	else if(contactno.length != 10)
+		alert("contact no should be 10 digit only");
+	else if(email=="")
+		alert("Email should not be empty");
+	else if(address=="")
+		alert("Address should not be empty");
+	else if(dob=="")
+		alert("Dob should not be empty");
+	else if(city=="")
+		alert("City should not be empty");
+	else if(state=="")
+		alert("State should not be empty");
+	else if(pincode=="")
+		alert("Pincode should not be empty");
+	else if(salary=="")
+		alert("Salary should not be empty");
+	else
+	{
+		var jsonval={ "emp_id":emp_id, "name":name, "desg":desg, "joindate":joindate, "contactno":contactno, "email":email, "address":address, "dob":dob, "city":city, "state":state, "pincode":pincode, "salary":salary};
+		var values = JSON.stringify(jsonval);
+		$.ajax({				
+  			type:"POST",
+  			url:"http://localhost:3000/employee/employee_edit_con1",
+  			dataType:"json",
+  			data: {val: values},
+  			success:function(result)
+  			{
+  				alert("updated");
+  				//alert(result);
+  				//console.log(result);
+  				//var emp_id=result.emp_id;
+  				//result(emp_id);
+        		window.location="employee_details"
+  				//show1();
+  			}
+  		})
+	}
+
+}
+
+
+</script>
+
+<body>
+
+
+<h1>employee edit</h1>
+
+<% @emp.each do |i| %>
+Employee Id:<input type="text" id="emp_id" value="<%= i.emp_id %>" readonly></input><br>
+Name:<input type="text" id="name" value="<%= i.name %>"></input><br>
+Designation:<input type="text" id="desg" value="<%= i.designation %>"></input><br>
+Joindate:<input type="text" id="joindate" data-provide='datepicker' value="<%= i.joindate %>"></input><br>
+Contact No:<input type="text" id="contactno" value="<%= i.contactno %>" maxlength="10"></input><br>
+email Id:<input type="text" id="email" value="<%= i.emailid %>"></input><br>
+address:<input type="text" id="address" value="<%= i.address %>" size="50"></input><br>
+Date of Birth:<input type="text" id="dob" data-provide='datepicker' value="<%= i.dob %>"></input><br>
+City:<input type="text" id="city" value="<%= i.city %>"></input><br>
+State:<input type="text" id="state" value="<%= i.state %>"></input><br>
+Pincode:<input type="number" id="pincode" value="<%= i.pincode %>"></input><br>
+Salary:<input type="number" id="salary" value="<%= i.salary %>"></input><br>
+<input type="button" value="Update" onclick="edit1()";></input>
+<% end %>

@@ -1,0 +1,98 @@
+<script type="text/javascript">
+window.onpageshow = function(event) 
+{
+  if (event.persisted) 
+  {
+    window.location="/employee/employee_details"
+  }
+};
+function del1 (emp_id)
+ {
+	//alert(emp_id);
+	var r = confirm("Press OK to delete");
+	if (r == true) 
+	{
+       // alert("Deleting");
+       $.ajax({				
+  			type:"POST",
+  			url:"http://localhost:3000/employee/employee_delete",
+  			dataType:"json",
+  			data: {emp_id: emp_id},
+  			success:function(result)
+  			{
+  				alert("Deleted");
+  				//alert(result);
+  				//console.log(result);
+  				//var emp_id=result.emp_id;
+  				//result(emp_id);
+        		window.location="employee_details"
+  				//show1();
+  			}
+  		})
+    }
+}
+function edit1(emp_id)
+{
+	//alert("jds");
+	var r = confirm("Press OK to Edit");
+	if (r == true) 
+	{
+		window.location="employee_edit?emp_id="+ emp_id
+  	}
+}
+
+function pic (emp_id) 
+{
+	//alert("hcs");
+	window.location="employee_register1?emp_id=" +emp_id;
+}
+function download1(emp_id)
+{
+  alert("ggg");
+  window.location="download_icard?emp_id=" +emp_id;
+}
+</script>
+
+<body>
+  <%= render "/admin/header" %>
+<h1>All employee details</h1>
+
+
+<table border="1" cellspacing="0" cellpadding="0">
+<tr>
+<th> Emp_id</th>
+<th> Name</th>
+<th> Descignation</th>
+<th> Contact no</th>
+<th> Email ID</th>
+<th>Image</th>  
+<th>Upload/Change Image</th>
+<th>Edit</th>
+<th>Delete</th>
+<th>I-card</th>
+</tr>
+<% @emp.each do |i| %>
+<tr>
+<td><%= i.emp_id %></td>
+<td><%= i.name %></td>
+<td><%= i.designation %></td>
+<td><%= i.contactno %></td>
+<td><%= i.emailid %></td>
+<!-- <td><img src='<%= i.image.thumb.url %>' alt="No Image" /></td> -->
+<% if i.image.thumb.url.present? %>
+    <td><center><font color="green">&#10004;</font></center></td>
+<%else%>
+  <td><center><font color="red">&#10007;</font></center></td>
+<% end %>
+<!--<td><a href='employee_edit?emp_id=<%= i.emp_id %> '>Edit</a></td> -->
+<td><a href onclick="pic('<%= i.emp_id %>')">Click Here</a></td>
+<td><a href onclick="edit1('<%= i.emp_id %>')">Click Here</a></td>
+<td><a href onclick="del1('<%= i.emp_id %>')">Click Here</a></td>
+<td><a href onclick="download1('<%= i.emp_id %>')">Download</a></td>
+</tr>
+<% end -%>
+</table>
+<center>
+<button onclick="location.href='employee_register';">Create New Employee</button>
+</center>
+

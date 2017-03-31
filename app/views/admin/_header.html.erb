@@ -1,0 +1,24 @@
+<style type="text/css">
+header{
+    padding: 1em;
+    color: white;
+    background-color: black;
+    clear: left;
+}
+</style>
+
+
+<script type="text/javascript">
+
+function logout()
+{
+	window.location.href="/admin/destroy_session"
+}
+</script>
+<body>
+<header>
+Admin Name:&nbsp&nbsp&nbsp<%= Admin.where(id: session[:id])[0].name %>
+<button onclick='logout()' style="float: right;">Log Out</button>
+</header>
+</body>
+

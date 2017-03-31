@@ -1,0 +1,165 @@
+<script type="text/javascript">
+window.onpageshow = function(event) 
+{
+  if (event.persisted) 
+  {
+    window.location="/attendance/attendance_view_month"
+  }
+};
+function fun0()
+{
+	//alert("XXXX");
+	//var v=location.search.split('values=');
+	//alert(v);
+	//var v1=JSON.parse(v);
+	//alert(v.year);
+	//var foo = jQuery.parseJSON(v);
+	//alert("555");
+	//alert(foo.id);
+	//var v1=JSON.parse(v);
+	//alert("abc");
+	var m="<%= @month %>";
+	var y="<%= @year %>";
+	var m1;
+	var tot_day="<%= @tot_day %>";
+	if(m==1)
+		m1="January";
+	else if(m==2)
+		m1="February";
+	else if(m==3)
+		m1="March";
+	else if(m==4)
+		m1="April";
+	else if(m==5)
+		m1="May";
+	else if(m==6)
+		m1="June";
+	else if(m==7)
+		m1="July";
+	else if(m==8)
+		m1="August";
+	else if(m==9)
+		m1="September";
+	else if(m==10)
+		m1="October";
+	else if(m==11)
+		m1="November";
+	else
+		m1="December";
+	$("#h1").append(m1);
+	$("#h1").append(" ");
+	$("#h1").append(y);
+	for (var i = 1; i <= tot_day; i++)
+	{
+		var x="<th>"+i+"</th>";
+		$("#t1").append(x);
+	}
+	$("#t1").append("<th>"+'Working Day'+"</th>");
+	$("#t1").append("<th>"+'Present'+"</th>");
+	$("#t1").append("<th>"+'Absent'+"</th>");
+}
+
+</script>
+<body onload="fun0();">
+<%= render "/admin/header" %>
+<h1 id="h1">Attendance Sheet for </h1>
+<table border="1" cellspacing="0" cellpadding="0" id="tab1">
+<tr id="t1">
+<th>Id</th>
+<th>Name</th>
+</tr>
+<% @att_val=Array.new
+Employeedtl.select(:emp_id).each do |t|
+    @emp_id=t.emp_id
+    #@att_val[0]=@emp_id
+    @tot_work_day=0
+    @tot_present=0
+    @tot_absent=0
+    for @day in 1..@tot_day
+        x=Employeeatdnc.where(["YEAR(date) = ? AND MONTH(date) = ? AND DAY(date) = ? AND emp_id = ?", @year, @month, @day, @emp_id])
+        y=HolidaySunday.where(["YEAR(date) = ? AND MONTH(date) = ? AND DAY(date) = ?", @year, @month, @day])
+        z=HolidayExtra.where(["YEAR(date) = ? AND MONTH(date) = ? AND DAY(date) = ?", @year, @month, @day])
+        @tot_work_day+=1
+        if x.present?
+            x=x[0].value           	
+            if x=="Present"
+            	@tot_present+=1;
+            	@att_val[@day-1]=x 
+            elsif x=="Absent"
+            	@tot_absent+=1;
+            	@att_val[@day-1]=x 
+            end
+        elsif y.present?
+        	@tot_work_day-=1
+        		y=y[0].reason
+        	@att_val[@day-1]=y
+        elsif z.present?
+        	@tot_work_day-=1
+        		z=z[0].reason
+        	@att_val[@day-1]=z
+        	                
+        else
+            @att_val[@day-1]="-"
+        end
+
+end%>
+
+<tr>
+<td><%= @emp_id %></td>
+	<% Employeedtl.select("name").where(emp_id: @emp_id).each do |t1| %>
+		<td><%= t1.name %></td>
+	<% end %>
+	<% @att_val.each do |i1| %>
+		<% if i1=="Present" %>
+			<td><font color="green">&#10004;</font></td>
+		<% elsif i1=="Absent" %>
+			<td><font color="red">&#10007;</font></td>
+		<% elsif i1=="Sunday" %>
+			<td><font color="red">&#10006;</font></td>
+		<% elsif i1=="-" %>
+			<td><center>-</center></td>
+		<% else %>
+			<td><font color="blue">&#10005;</font></td>
+	<% end %>
+<% end %>
+<td><center><%= @tot_work_day %></center></td>
+<td><center><%= @tot_present %></center></td>
+<td><center><%= @tot_absent %></center></td>
+</tr>
+
+<% end %>
+
+
+
+
+</table>
+<p>
+<font color="green">&#10004;</font>:Present&nbsp&nbsp&nbsp
+<font color="red">&#10007;</font>:Absent&nbsp&nbsp&nbsp
+<font color="red">&#10006;</font>:Sunday&nbsp&nbsp&nbsp
+<font color="blue">&#10005;</font>:Holiday&nbsp&nbsp&nbsp
+<font>-</font>:Nil
+</p>
+<%
+@extra_date=Array.new
+@extra_reason=Array.new
+@i=0
+@z1=HolidayExtra.where(["YEAR(date) = ? AND MONTH(date) = ?", @year,@month])
+	
+ %>
+<b>Extra Holiday List</b>
+<table border="1" cellspacing="0" cellpadding="0" >
+<tr>
+<th>Date</th>
+<th>Reason</th>
+</tr>
+<% @z1.each do |i2| %>
+<tr>
+<td><%= i2.date.strftime("%d-%m-%Y") %></td>
+<td><%= i2.reason %></td>
+</tr>
+<% end %>
+</table>
+</body>
+
+

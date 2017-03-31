@@ -1,0 +1,58 @@
+<script>
+
+if (<%= session[:id] %> != "")
+{
+  window.location.hash="no-back-button";
+  window.location.hash="Again-No-back-button";//again because google chrome don't insert first hash into history
+  window.onhashchange=function(){window.location.hash="";}
+}
+window.onpageshow = function(event) 
+{
+  if (event.persisted) 
+  {
+    window.location="admin_home"
+  }
+};
+function fun1()
+{
+   var id= "<%= session[:id] %>";
+	 //alert(id);
+	 $.ajax({        
+      type:"POST",
+      url:"http://localhost:3000/admin/admin_direct1",
+      dataType:"json",
+      data: {id: id},
+      success:function(result)
+     {
+       //$("#p1").append("Admin name=" + result[0].name);
+       $("#d1").append("<button style='margin-right:50px' onclick='fun2(1)'>Attendance</button>");
+       $("#d1").append("<button style='margin-right:50px' onclick='fun2(2)'>Salary</button>");
+       $("#d1").append("<button style='margin-right:50px' onclick='fun2(3)'>Employee Details</button>");
+       //$("#d1").append("<button style='margin-right:50px' onclick='logout()'>Log Out</button>");
+      }  
+    })
+}
+
+function fun2(val)
+{
+	//alert("Hi");
+	//alert(val);
+	if(val==1)
+	window.location = "/attendance/attendance";
+	else if(val==2)
+	window.location = "/salary/salary";
+	else if(val==3)
+	window.location = "/employee/employee_details";
+}
+
+
+
+</script>
+<body onload="fun1()">
+<%= render "/admin/header" %><center>
+<h1> Admin Home page</h1>
+<h3> Welcome </h3>
+<p id="p1"></p1>
+	<div id="d1"></div></center>
+</body>
+

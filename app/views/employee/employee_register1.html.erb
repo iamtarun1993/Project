@@ -1,0 +1,42 @@
+<script>
+window.onpageshow = function(event) 
+{
+  if (event.persisted) 
+  {
+    window.location="/employee/employee_register1"
+  }
+};
+var id = location.search.split('id=')[1];
+//alert("GGGGGGGGGGGGGGgggggggg");
+//alert(id);
+//document.getElementById("id").value ="xyz";
+//$('#id').value("abc");
+//$("#id").append("Dolly Duck");
+ $(document).ready(function(){
+        $("#employeedtl_emp_id").val(id);
+   });
+</script>
+
+<body>
+
+	<%= render "/admin/header" %>
+<%= form_for @emp, url:{action: "insertpic"} do |s| %>
+
+<p>
+
+Id:<%= s.text_field :emp_id %>
+
+</p> 
+
+<!--
+ID:<%= text_field_tag(:id) %><span id="sp1"> </span><br>
+<p>
+-->
+Image: <%= s.file_field :image %>
+</p>
+
+
+<p>
+<%= s.submit "Upload" %>
+</p>
+<% end -%>

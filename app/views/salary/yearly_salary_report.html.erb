@@ -1,0 +1,73 @@
+<script type="text/javascript">
+window.onpageshow = function(event) 
+{
+  if (event.persisted) 
+  {
+    window.location="/salary/yearly_salary_report"
+  }
+};
+
+
+
+</script>
+
+
+<body>
+<%= render "/admin/header" %>
+<h1>Salary report of year <%= @year %></h1>
+<table border="1" cellspacing="0" cellpadding="0">
+        <tr>
+	       <th>Id</th>
+	       <th>Name</th>
+	       <th>Janunary</th>
+	       <th>February</th>
+	       <th>March</th>
+	       <th>April</th>
+	       <th>May</th>
+	       <th>June</th>
+	       <th>July</th>
+	       <th>August</th>
+	       <th>September
+	       <th>October</th>
+	       <th>November</th>
+	       <th>December</th>
+        </tr>
+<% 
+@all_emp_distinct=Employeedtl.select(("DISTINCT(emp_id)")).each do |i2|
+	@cur_emp_id=i2.emp_id
+@all_salary = AllSalary.where(year: @year, emp_id: @cur_emp_id)
+	puts(@all_salary)
+	
+		
+		@salary_val_array= Array.new
+		@salary_val_array[0]=@cur_emp_id
+		@salary_val_array[1]=Employeedtl.select(:name).where(emp_id: @cur_emp_id)[0].name
+		i=2
+		for @month in 1..12
+			@val=@all_salary.where(emp_id: @cur_emp_id, month: @month)
+				if @val.present?
+					@salary_val_array[i]=@val[0].amount
+					
+				else
+					@salary_val_array[i]="-"
+				end
+				i=i+1
+		end
+
+
+
+
+	#puts(i2.emp_id) 
+	%>
+
+        <tr>
+        	<% @salary_val_array.each do |i1| %>
+        	<td><center><%= i1 %></center></td>
+        	<% end %>
+        </tr>
+	
+
+<% end %>
+
+</table>
+</body>

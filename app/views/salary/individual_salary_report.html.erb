@@ -1,0 +1,84 @@
+<html>
+<script type="text/javascript">
+window.onpageshow = function(event) 
+{
+  if (event.persisted) 
+  {
+    window.location="/salary/individual_salary_report"
+  }
+};
+
+function download()
+{
+    window.location.href='download_pdf?link='+window.location.href+'&emp_id='+"<%= @emp_id %>"
+}
+
+
+</script>
+<body>
+
+<%= render "/admin/header" %>
+    <% Employeedtl.where(emp_id: @emp_id).each do |i| %>
+        <b>Employee Name</b>:&nbsp<%= i.name %><br>
+        <b>Designation</b>:&nbsp<%= i.designation %>
+
+    <% end %>
+    <table border="1" cellspacing="0" cellpadding="0">
+        <tr>
+	       <th>YEAR</th>
+	       <th colspan="12">Month</th>
+        </th>
+        <tr>
+	       <th></th>
+	       <th>Janunary</th>
+	       <th>February</th>
+	       <th>March</th>
+	       <th>April</th>
+	       <th>May</th>
+	       <th>June</th>
+	       <th>July</th>
+	       <th>August</th>
+	       <th>September
+	       <th>October</th>
+	       <th>November</th>
+	       <th>December</th>
+        </tr>
+        <% 
+            @all_year=Array.new
+            i=0
+            AllSalary.select("DISTINCT(year)").order( 'year ASC' ).each do |i1|
+                @all_year[i]=i1.year
+                i=i+1;
+            end
+    
+            @all_year.each do |i2|
+                @all_salary=Array.new
+
+                @year=i2
+                @all_salary[0]=@year
+                puts(@year)
+                for @month in 1..12
+
+                    @value=AllSalary.select(:amount).where(emp_id: @emp_id, year: @year, month: @month)
+                    if @value.present?
+                            @value_tmp=@value[0].amount
+                            @all_salary[@month]=@value_tmp
+    
+                    else
+                        @all_salary[@month]="-"
+                    end
+ 
+                end %>
+                <tr>
+	               <% @all_salary.each do |i4| %>
+	                   <td><center><%= i4 %></center></td>
+	               <% end %>
+                </tr>
+            <%end%>
+
+    </table>
+<div id="d1_hide">
+<button onclick="download()">Dowload</button>
+</div>
+</body>
+</html>

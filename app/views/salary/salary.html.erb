@@ -1,0 +1,185 @@
+<script type="text/javascript">
+
+window.onpageshow = function(event) 
+{
+  if (event.persisted) 
+  {
+    window.location="/salary/salary"
+  }
+};
+
+function fun1(val)
+{
+	//alert("hi");
+	$("#d1").hide();
+	if(val==1)
+	{
+		$("#d2").show();
+		
+	}
+	else if(val==2)
+	{
+    $("#d4").show();
+	}
+	else if(val==3)
+	{
+		$("#d3").show();
+	}
+}
+
+function fun2()
+{
+	var month=document.getElementById('month').value;
+	var year=document.getElementById('year').value;
+	var jsonval={"year":year, "month":month };
+  	var values = JSON.stringify(jsonval);
+	alert(month);
+	alert(year);
+	$.ajax
+			({				
+  				type:"POST",
+  		  		url:"http://localhost:3000/salary/create_salary_report",
+  		  		dataType:"json",
+  		  		data: {values: values},
+  		  		success:function(result)
+  		  		{
+        			alert("Salary updated");
+        		}
+  			});
+}
+
+function yearly_report()
+{
+  $("#d5").show();
+  $("#d4").hide();
+}
+
+
+function monthly_report()
+{
+  $("#d4").hide();
+  $("#d6").show(); 
+}
+
+
+function fun3()
+{
+  var month=document.getElementById('month1').value;
+  var year=document.getElementById('year1').value;
+  var jsonval={"year":year, "month":month };
+  var values = JSON.stringify(jsonval);
+  //alert("DDDDD")
+  //alert(month);
+  //alert(year);
+  window.location.href='monthly_salary_report?year=' +year+ '&month=' +month; 
+}
+
+</script>
+
+<body>
+  <%= render "/admin/header" %>
+<div id="d1">
+<h1>Salary Report</h1>
+<button style='margin-right:50px' onclick='fun1(1)'>Create</button>
+ <button style='margin-right:50px' onclick='fun1(2)'>View All(Yearly/Monthly)</button>
+ <button style='margin-right:50px' onclick='fun1(3)'>View Individual</button>
+</div>
+
+
+
+<div id="d2" style="display:none;">
+Month
+<select id="month">
+  <option value="1">January</option>
+  <option value="2">February</option>
+  <option value="3">March</option>
+  <option value="4">April</option>
+  <option value="5">May</option>
+  <option value="6">June</option>
+  <option value="7">July</option>
+  <option value="8">August</option>
+  <option value="9">September</option>
+  <option value="10">October</option>
+  <option value="11">November</option>
+  <option value="12">December</option>
+</select>
+
+Year
+<select id="year">
+  <option value="2016">2016</option>
+  <option value="2017">2017</option>
+  <option value="2018">2018</option>
+</select>
+<button id="b1" style='margin-right:50px' onclick='fun2()'>Create Salary Report</button>
+</div>
+<div id="d3" style="display:none;">
+<table border="1" cellspacing="0" cellpadding="0">
+<tr>
+  <th>Employee Id</th>
+  <th>Employee Name</th>
+  <th>View</th>
+</tr>
+
+<% Employeedtl.select(:name, :emp_id).each do |t| %>
+<tr>
+  <td><%= t.emp_id %></td>
+  <td><%= t.name %></td>
+  <td><a href="individual_salary_report?emp_id=<%= t.emp_id %>">View</a></td>
+</tr>
+	 <% end %>
+   </table>
+</div>
+<div id="d4" style="display:none;">
+<input type="radio" id="rb1" name="report" onclick='yearly_report()'>Yearly Report<br>
+<input type="radio" id="rb2" name="report" onclick='monthly_report()'>Monthly Report<br>
+</div>
+
+
+
+<div id="d5" style="display:none;">
+<h1>yearly</h1>
+
+<% @all_year=Array.new
+            i=0
+            AllSalary.select("DISTINCT(year)").order( 'year ASC' ).each do |i1|
+                @all_year[i]=i1.year
+                i=i+1;
+            end %>
+<% @all_year.each do |i2| %>
+
+<a href="yearly_salary_report?year=<%= i2 %>"><%= i2 %></a><br></br>
+
+<% end %>
+
+</div>
+
+
+<div id="d6" style="display:none;">
+Month
+<select id="month1">
+  <option value="1">January</option>
+  <option value="2">February</option>
+  <option value="3">March</option>
+  <option value="4">April</option>
+  <option value="5">May</option>
+  <option value="6">June</option>
+  <option value="7">July</option>
+  <option value="8">August</option>
+  <option value="9">September</option>
+  <option value="10">October</option>
+  <option value="11">November</option>
+  <option value="12">December</option>
+</select>
+
+Year
+<select id="year1">
+  <option value="2016">2016</option>
+  <option value="2017">2017</option>
+  <option value="2018">2018</option>
+</select>
+<button id="b2" style='margin-right:50px' onclick='fun3()'>Monthly Salary Report</button>
+
+
+
+</div>
+ </body>

@@ -1,0 +1,149 @@
+
+
+<script type="text/javascript">
+window.onpageshow = function(event) 
+{
+  if (event.persisted) 
+  {
+    window.location="/employee/employee_register"
+  }
+};
+$(document).ready(function(){
+    $("#dob").datepicker({format: 'yyyy-mm-dd'});
+    $("#joindate").datepicker({format: 'yyyy-mm-dd'});
+
+  });
+
+function fun1()
+{
+	//alert("aaaa");
+	var name=document.getElementById('name').value;
+	var desg=document.getElementById('desg').value;
+	var joindate=document.getElementById('joindate').value;
+	var contactno=document.getElementById('contactno').value;
+	var email=document.getElementById('email').value;
+	var address=document.getElementById('address').value;
+	var dob=document.getElementById('dob').value;
+	var city=document.getElementById('city').value;
+	var state=document.getElementById('state').value;
+	var pincode=document.getElementById('pincode').value;
+	var salary=document.getElementById('salary').value;
+
+	//var state=document.getElementById('state').value;
+	//var pincode=document.getElementById('pincode').value;
+	if(name=="")
+		alert("Name should not be empty");
+	else if(desg=="")
+		alert("Designation should not be empty");
+	else if(joindate=="")
+		alert("Joindate should not be empty");
+	else if(contactno=="")
+		alert("Contact No should not be empty");
+	else if(contactno.length != 10)
+		alert("contact no should be 10 digit only");
+	else if(email=="")
+		alert("Email should not be empty");
+	else if(address=="")
+		alert("Address should not be empty");
+	else if(dob=="")
+		alert("Dob should not be empty");
+	else if(city=="")
+		alert("City should not be empty");
+	else if(state=="")
+		alert("State should not be empty");
+	else if(pincode=="")
+		alert("Pincode should not be empty");
+	else if(salary=="")
+		alert("Salary should not be empty");
+	//else if(city=="")
+		//alert("City should not be empty");
+	//else if(state=="")
+		//alert("State should not be empty");
+	//else if(pincode=="")
+		//alert("Pincode should not be empty");
+	else
+	{
+		if(b1.value=="Submit")
+		{
+			$('#name').hide();
+			$('#sp1').append(name);
+			$('#desg').hide();
+			$('#sp2').append(desg);
+			$('#joindate').hide();
+			$('#sp3').append(joindate);
+			$('#contactno').hide();
+			$('#sp4').append(contactno);
+			$('#email').hide();
+			$('#sp5').append(email);
+			$('#address').hide();
+			$('#sp6').append(address);
+			$('#dob').hide();
+			$('#sp7').append(dob);
+			$('#city').hide();
+			$('#sp8').append(city);
+			$('#state').hide();
+			$('#sp9').append(state);
+			$('#pincode').hide();
+			$('#sp10').append(pincode);
+			$('#salary').hide();
+			$('#sp11').append(salary);
+			//$('#state').hide();
+			//$('#sp7').append(state);
+			//$('#pincode').hide();
+			//$('#sp8').append(pincode);
+			b1.value="Insert";
+		}		
+		else
+		{
+			alert("done");
+			var jsonval={ "name":name, "desg":desg, "joindate":joindate, "contactno":contactno, "email":email, "address":address, "dob":dob, "city":city, "state":state, "pincode":pincode, "salary":salary};
+			var values = JSON.stringify(jsonval);
+			//console.log(jsonval);
+			 $.ajax({				
+  				type:"POST",
+  				url:"http://localhost:3000/employee/employee_register_con1",
+  				dataType:"json",
+  				data: {val: values},
+  				success:function(result)
+  				{
+  					alert("Inserted");
+  					console.log(result);
+  					var emp_id=result.emp_id;
+  					//result(emp_id);
+        			//window.location="employee_register1?emp_id=" +emp_id
+  					//show1();
+  					window.location="employee_details"
+  				}
+  			})
+
+		}
+	}
+
+}
+
+
+
+
+</script>
+
+<body>
+	<%= render "/admin/header" %>
+
+<h1>new</h1>
+
+<%= form_tag do %>
+
+Name:<%= text_field_tag(:name) %><span id="sp1"> </span><br>
+Designation:<%= text_field_tag(:desg) %><span id="sp2"> </span><br>
+Joining Date:<%= text_field_tag(:joindate,:"") %><span id="sp3"> </span><br>
+Contact No:<%= text_field_tag(:contactno, :"" , maxlength: 10) %><span id="sp4"> </span><br>
+Email ID: <%= email_field_tag(:email) %><span id="sp5"> </span><br>
+Address:<%= text_field_tag(:address, :"", size:'50') %><span id="sp6"> </span><br>
+
+Date of Birth:<%= text_field_tag(:dob,:"") %><span id="sp7"> </span><br>
+City:<%= text_field_tag(:city) %><span id="sp8"> </span><br>
+State:<%= text_field_tag(:state) %><span id="sp9"> </span><br>
+Pincode: <%= number_field_tag(:pincode) %><span id="sp10"> </span><br>
+Salary: <%= number_field_tag(:salary) %><span id="sp11"> </span><br>
+<% end -%>
+<input type="button" id="b1" value="Submit" onclick="fun1();" />

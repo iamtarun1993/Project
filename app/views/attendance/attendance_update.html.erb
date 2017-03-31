@@ -1,0 +1,92 @@
+<script type="text/javascript">
+window.onpageshow = function(event) 
+{
+  if (event.persisted) 
+  {
+    window.location="/attendance/attendance_update"
+  }
+};
+
+
+var today = new Date();
+var date = today.getDate();
+var month = today.getMonth()+1;
+var year = today.getFullYear();
+
+
+function fun0()
+{
+	$("#cd").append(date);
+	$("#cd").append("-"+month);
+	$("#cd").append("-"+year);
+
+ 
+  //alert("df");
+  $.ajax({        
+      type:"POST",
+      url:"http://localhost:3000/attendance/attendance_update",
+      dataType:"json",
+      data: { },
+      success:function(result1)
+      {
+        var emp_id;
+        var name;
+        var i=0;
+        var tab;
+        //$("td").remove();
+        for (i = 0; i < result1.length; i++)
+        {
+          emp_id = result1[i].emp_id;
+         
+          //alert(result1.length);
+          name=result1[i].name;
+          designation=result1[i].designation;
+          rad="<input type='radio' name='"+i+"rad' value='Present'>Present</input><input type='radio' name='"+i+"rad' value='Absent' checked >Absent</input>";
+
+          tab="<tr><td id='"+i+"tx1'>"+emp_id+"</td><td id='"+i+"tx2'>"+name+"</td><td id='"+i+"tx3'>"+designation+"</td><td id='"+i+"rad1'>"+rad+"</td><td id='"+i+"but1' onclick='update("+i+")'><button>update</button></td></tr>";
+          $("#tab1").append(tab);
+        } 
+      }
+      })
+}
+function update(i)
+{
+  //alert("abc");
+  //alert(i);
+   var comb_date =+year+"-"+month+"-"+date;
+  var emp_id=document.getElementById(+ i +"tx1").innerHTML;
+  alert(emp_id);
+  var x=$('input[name="'+i+'rad"]:checked').val();
+  alert(x);
+  var jsonval={ "emp_id":emp_id, "date":comb_date,  "value":x};
+  var values = JSON.stringify(jsonval);
+  $.ajax({        
+      type:"POST",
+      url:"http://localhost:3000/attendance/attendance_update1",
+      dataType:"json",
+      data: {val: values},
+      success:function(result)
+     {
+        alert("updated");
+     }  
+    })
+}
+
+
+</script>
+
+
+
+<body onload="fun0()">
+  <%= render "/admin/header" %>
+<h1>update attandence</h1>
+<table border="1" cellspacing="0" cellpadding="0" id="tab1">
+<tr>
+<th>Employee Id</th>
+<th>Employee Name</th>
+<th>Employee Designation</th>
+<th id="cd">Date: </th>
+</tr>
+
+</table>
+</body>

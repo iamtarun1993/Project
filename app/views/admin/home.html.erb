@@ -1,0 +1,54 @@
+<html>
+<script type="text/javascript">
+ function fun1()
+  {
+     var username=document.getElementById('username').value;
+     var password=document.getElementById('password').value;
+      if (username == "") 
+      {
+        alert("Please enter your Username");
+      }
+      else if(password == "")
+      {
+        alert("Please enter your Password");
+      }
+      else
+      {
+        $.ajax({				
+  		  type:"POST",
+  		  url:"http://localhost:3000/admin/admin_check1",
+  		  dataType:"json",
+  		  data: {username: username, password: password},
+  		  success:function(result)
+  		  {
+          if(result[0] == null)
+          alert("Invalid username or password");
+          else
+          {
+            var id=result[0].id;
+            window.location = "/admin/admin_home";
+          }
+  		  },
+        error: function () 
+        {
+          alert("bye");
+        }
+  		})
+    }
+  }
+</script>
+
+
+<body>
+  <center>
+    <h1>Home Page</h1>
+    <%= form_tag do %>
+      User Name:<%= text_field_tag(:username) %><br>
+      Password:<%= password_field_tag(:password) %><br>
+    <% end -%>
+    <input type="button" value="Log In" onclick="fun1();" />
+      <p id="p1"></p>
+  </center>
+
+</body>
+</html>

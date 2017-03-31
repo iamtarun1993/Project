@@ -1,0 +1,87 @@
+<script type="text/javascript">
+window.onpageshow = function(event) 
+{
+  if (event.persisted) 
+  {
+    window.location="/attendance/attendance_view_year"
+  }
+};
+</script>
+<body>
+<%= render "/admin/header" %>
+<h1>Attendance for year <%= @year %></h1>
+
+<table border="1" cellspacing="0" cellpadding="0" id="tab1">
+<tr id="t1">
+<th>Id</th>
+<th>Name</th>
+<th>January</th>
+<th>February</th>
+<th>March</th>	
+<th>April</th>	
+<th>May</th>
+<th>June</th>
+<th>July</th>
+<th>August</th>
+<th>September</th>
+<th>October</th>
+<th>November</th>
+<th>December</th>
+</tr>
+<% @att_val=Array.new
+Employeedtl.select(:emp_id).each do |t|
+    @yearly_att_val=Array.new
+
+    @emp_id=t.emp_id
+    #puts(@emp_id)
+	for @month in 1..12
+    	if (@month==1 || @month==3 || @month==5 || @month==7 || @month==8 || @month==10 || @month==12)
+        		@tot_day=31
+    	elsif @month==2
+        	if(@year % 400 == 0)
+            	@tot_day=29
+        	elsif (@year % 100 == 0)
+            	@tot_day=28
+        	elsif (@year % 4 == 0)
+            	@tot_day=29
+        	else
+            	@tot_day=28    
+        	end      
+    	else
+        	@tot_day=30
+    	end
+        @tot_work_day=0
+        @tot_present=0
+        @tot_absent=0
+        for @day in 1..@tot_day
+            x=Employeeatdnc.where(["YEAR(date) = ? AND MONTH(date) = ? AND DAY(date) = ? AND emp_id = ?", @year, @month, @day, @emp_id])
+            y=HolidaySunday.where(["YEAR(date) = ? AND MONTH(date) = ? AND DAY(date) = ?", @year, @month, @day])
+            z=HolidayExtra.where(["YEAR(date) = ? AND MONTH(date) = ? AND DAY(date) = ?", @year, @month, @day])
+            @tot_work_day+=1
+            if x.present?
+                x=x[0].value             
+                if x=="Present"
+                    @tot_present+=1;
+                elsif x=="Absent"
+                    @tot_absent+=1;
+                end
+            elsif y.present?
+                @tot_work_day-=1
+            elsif z.present?
+                @tot_work_day-=1                       
+            else
+            end
+        end
+        @yearly_att_val[@month-1]=@tot_present.to_s+"-"+@tot_work_day.to_s
+    end%>
+    <tr>
+        <td><%= @emp_id %></td>
+    <td><%= (Employeedtl.select(:name).where(emp_id: @emp_id))[0].name %></td>
+        <% @yearly_att_val.each do |i1| %>
+           <td><%= i1 %></td>
+        <% end %>
+    </tr>
+
+ <% end %>
+</table>
+</body>
