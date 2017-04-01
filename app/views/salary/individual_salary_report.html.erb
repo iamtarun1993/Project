@@ -47,26 +47,26 @@ function download()
             @all_year.each do |i2|
                 @all_salary=Array.new
 
-                @year=i2
-                @all_salary[0]=@year
-                puts(@year)
-                for @month in 1..12
+                @year=i2 %>
+                <tr>
+                    <td><%= @year %></td>
+               <% for @month in 1..12
 
                     @value=AllSalary.select(:amount).where(emp_id: @emp_id, year: @year, month: @month)
                     if @value.present?
-                            @value_tmp=@value[0].amount
-                            @all_salary[@month]=@value_tmp
-    
-                    else
-                        @all_salary[@month]="-"
-                    end
+                            @value_tmp=@value[0].amount %>
+                            
+                        <td><center><a href='pdf_salary_gen?year=<%= @year %> &month=<%= @month %> &emp_id=<%= @emp_id %>'><%= @value_tmp %></center></a></td>
+                  <%  else %>
+                        <td><center>-</center></td>
+                   <% end
  
                 end %>
-                <tr>
-	               <% @all_salary.each do |i4| %>
-	                   <td><center><%= i4 %></center></td>
-	               <% end %>
-                </tr>
+             <!--    <tr>
+	              <% @all_salary.each do |i4| %>
+	                   <td><center><a href='pdf_salary_gen?year=<%= @year %> &month=<%= i4 %>' ><%= i4 %></a></center></td> 
+	               <% end %> 
+                </tr> -->
             <%end%>
 
     </table>

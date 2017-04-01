@@ -88,4 +88,34 @@ def download_pdf
     #redirect_to link
 end
 
+
+def pdf_salary_gen
+
+
+
+puts("5555555555555555555555555555")
+@year=params[:year]
+@month=params[:month]
+@emp_id=params[:emp_id]
+@name=Employeedtl.where(emp_id: @emp_id)[0].name
+@designation= Employeedtl.where(emp_id: @emp_id)[0].designation
+#puts(@emp_name)
+@amount=AllSalary.where(year: @year, month: @month, emp_id: @emp_id)[0].amount
+#puts(@amount[0].amount)
+@month_char=Date::MONTHNAMES[@month.to_i]
+filename= "#{@emp_id}_#{@year}_#{@month_char}_salary.pdf"
+puts(filename)
+pdf = Prawn::Document.new
+pdftk = PdfForms.new('/usr/bin/pdftk')
+file1=pdftk.fill_form 'app/views/salary/files/report.pdf', "public/salary/#{filename}", {:name => @name, :designation => @designation, :year => @year, :month => @month_char, :amount => @amount}, :flatten => true
+
+puts(@month_char)
+
+puts("_____________________________________")
+send_file "public/salary/#{filename}", :type=>"application/pdf", :x_sendfile=>true
+
+
+
+end
+
 end

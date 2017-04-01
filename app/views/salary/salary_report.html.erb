@@ -1,0 +1,17 @@
+<h1>create salary report</h1>
+<table border="1" cellspacing="0" cellpadding="0">
+<tr>
+  <th>Id</th>
+	       <th>Name</th>
+<% AllSalary.select("DISTINCT(year)").order( 'year ASC' ).each do |i1| %>
+	<th><%= i1.year %></th>
+<% end %>
+</tr>
+
+<% Employeedtl.select(:name, :emp_id).each do |t| %>
+<tr>
+  <td><%= t.emp_id %></td>
+  <td><%= t.name %></td>
+</tr>
+	 <% end %>
+   </table>

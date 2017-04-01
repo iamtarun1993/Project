@@ -90,6 +90,12 @@ get 'salary/all_report'
 post 'salary/all_report'
 get 'salary/download_pdf'
 post 'salary/download_pdf'
+get 'salary/salary_report'
+post 'salary/salary_report'
+
+
+get 'salary/pdf_salary_gen'
+post 'salary/pdf_salary_gen'
 
 
 #get 'employee/admin_home?name='
